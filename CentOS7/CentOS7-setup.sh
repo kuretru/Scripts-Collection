@@ -15,14 +15,14 @@ function main() {
 
 	cat <<EOF
 ################################################################################
-#
-# 呉真的服务器一键初始化脚本，请务必保证当前是一个全新的环境
-# 如有疑惑，请访问https://github.com/kuretru/Scripts-Collection
-#
+#                                                                              #
+# 呉真的服务器一键初始化脚本，请务必保证当前是一个全新的环境                             #
+# 如有疑惑，请访问https://github.com/kuretru/Scripts-Collection                   #
+#                                                                              #
 ################################################################################
 EOF
 
-	read -e -p "输入Y开始安装(y/n)" ANSWER
+	read -e -p "输入y开始安装(y/n)" ANSWER
 	if [[ "$ANSWER" == 'y' ]] || [[ "$ANSWER" == 'yes' ]]; then
 		sleep 1
 
@@ -37,9 +37,17 @@ EOF
 		SSHConfig
 		FirewallConfig
 		InstallSSlibev
-		ConfigPerson
 		InstallNginx
 		InstallPHP
+		ConfigPerson
+
+		cat <<EOF
+================================================================================
+
+========================= 开始完成，请重启服务器 =========================
+
+================================================================================
+EOF
 
 	else
 		echo '用户退出'
@@ -99,11 +107,6 @@ EOF
 	systemctl enable crond.service
 	systemctl enable ntpd.service
 	systemctl start ntpd.service
-	#登录文本
-	cat <<EOF >/etc/motd
-警告：你的IP已被记录，所有操作将会通告管理员！
-Warning: Your IP address has been recorded, all operations will notify the administrator!
-EOF
 }
 
 #配置SSH
@@ -116,12 +119,12 @@ function SSHConfig() {
 ================================================================================
 EOF
 
-	sed -i "s/^.*Port.*$/Port 8022/g" /etc/ssh/sshd_config
+	sed -i "s/#Port .*$/Port 8022/g" /etc/ssh/sshd_config
 	sed -i "s/^.*LoginGraceTime.*/LoginGraceTime 2m/g" /etc/ssh/sshd_config
 	sed -i "s/^.*MaxAuthTries.*/MaxAuthTries 2/g" /etc/ssh/sshd_config
 	sed -i "s/^.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
 	sed -i "s/^.*AuthorizedKeysFile/AuthorizedKeysFile/g" /etc/ssh/sshd_config
-	sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+	sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 	cd /root
 	mkdir .ssh
 	touch .ssh/authorized_keys
@@ -168,7 +171,7 @@ EOF
 	yum -y install shadowsocks-libev
 	systemctl enable shadowsocks-libev.service
 	server_value="\"0.0.0.0\""
-	if [ ! -z $"IPv6" ]; then
+	if [ $IPv6 ]; then
 		server_value="[\"[::0]\",\"0.0.0.0\"]"
 	fi
 	cat <<-EOF >/etc/shadowsocks-libev/config.json
@@ -182,21 +185,6 @@ EOF
 		}
 	EOF
 	systemctl restart shadowsocks-libev.service
-}
-
-#个人配置
-function ConfigPerson() {
-	cat <<EOF
-================================================================================
-
-============================== 开始个人配置 ==============================
-
-================================================================================
-EOF
-
-	cd /root
-	sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/.vimrc
 }
 
 #安装nginx
@@ -239,6 +227,26 @@ EOF
 	systemctl enable php-fpm.service
 	cd /usr/share/nginx/html
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php
+}
+
+#个人配置
+function ConfigPerson() {
+	cat <<EOF
+================================================================================
+
+============================== 开始个人配置 ==============================
+
+================================================================================
+EOF
+
+	cd /root
+	sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/.vimrc
+	#登录文本
+	cat <<EOF >/etc/motd
+警告：你的IP已被记录，所有操作将会通告管理员！
+Warning: Your IP address has been recorded, all operations will notify the administrator!
+EOF
 }
 
 main
