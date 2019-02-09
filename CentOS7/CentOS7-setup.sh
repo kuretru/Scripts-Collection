@@ -119,7 +119,7 @@ function SSHConfig() {
 ================================================================================
 EOF
 
-	sed -i "s/#Port .*$/Port 8022/g" /etc/ssh/sshd_config
+	sed -i "s/^#Port .*$/Port 8022/g" /etc/ssh/sshd_config
 	sed -i "s/^.*LoginGraceTime.*/LoginGraceTime 2m/g" /etc/ssh/sshd_config
 	sed -i "s/^.*MaxAuthTries.*/MaxAuthTries 2/g" /etc/ssh/sshd_config
 	sed -i "s/^.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
@@ -225,6 +225,12 @@ EOF
 	rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
 	yum -y install php72u-fpm-nginx php72u-cli php72u-mysqlnd php72u-json php72u-xml
 	systemctl enable php-fpm.service
+	cd /etc/php-fpm.d
+	sed -i "s/^pm.max_children =.*$/pm.max_children = 2/g" www.conf
+	sed -i "s/^pm.start_servers =.*$/pm.start_servers = 1/g" www.conf
+	sed -i "s/^pm.min_spare_servers =.*$/pm.min_spare_servers = 1/g" www.conf
+	sed -i "s/^pm.max_spare_servers =.*$/pm.max_spare_servers = 2/g" www.conf
+	sed -i "s/^;request_slowlog_timeout =.*$/request_slowlog_timeout = 2s/g" www.conf
 	cd /usr/share/nginx/html
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php
 }
