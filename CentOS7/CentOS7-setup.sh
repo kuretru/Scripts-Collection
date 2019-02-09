@@ -81,7 +81,7 @@ function InstallPackages() {
 EOF
 
 	yum -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
-		unzip crontabs git make gcc gcc-c++ firewalld ntp rsyslog zsh
+		unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh
 	yum clean all
 }
 
@@ -105,8 +105,8 @@ EOF
 	#时间相关设置
 	timedatectl set-timezone Asia/Shanghai
 	systemctl enable crond.service
-	systemctl enable ntpd.service
-	systemctl start ntpd.service
+	systemctl enable chronyd.service
+	systemctl start chronyd.service
 }
 
 #配置SSH
