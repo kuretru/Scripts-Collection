@@ -162,6 +162,48 @@ EOF
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/.vimrc
 }
 
+#安装nginx
+function InstallNginx() {
+	cat <<EOF
+================================================================================
+
+============================== 开始安装Nginx ==============================
+
+================================================================================
+EOF
+
+	yum -y install yum-utils
+	cat <<EOF >/etc/yum.repos.d/nginx.repo
+[nginx-mainline]
+name=nginx mainline repo
+baseurl=http://nginx.org/packages/mainline/centos/\$releasever/\$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+EOF
+	yum-config-manager --enable nginx-mainline
+	yum -y install nginx certbot
+	systemctl enable nginx.service
+}
+
+#安装PHP
+function InstallPHP() {
+	cat <<EOF
+================================================================================
+
+============================== 开始安装PHP ==============================
+
+================================================================================
+EOF
+
+	yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+	rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
+	yum -y install php72u-fpm-nginx php72u-cli php72u-mysqlnd php72u-json php72u-xml
+	systemctl enable php-fpm.service
+	cd /usr/share/nginx/html
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php
+}
+
 #================================================================================
 #脚本开始
 clear
@@ -191,6 +233,8 @@ if [[ "$ANSWER" == 'y' ]] || [[ "$ANSWER" == 'yes' ]]; then
 	FirewallConfig
 	InstallSSlibev
 	ConfigPerson
+	InstallNginx
+	InstallPHP
 
 else
 	echo '用户退出'
