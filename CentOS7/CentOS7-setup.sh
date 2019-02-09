@@ -10,6 +10,43 @@
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
 IPv6=$(wget -qO- -t1 -T2 ipv6.icanhazip.com)
 
+function main() {
+	clear
+
+	cat <<EOF
+################################################################################
+#
+# 呉真的服务器一键初始化脚本，请务必保证当前是一个全新的环境
+# 如有疑惑，请访问https://github.com/kuretru/Scripts-Collection
+#
+################################################################################
+EOF
+
+	read -e -p "输入Y开始安装(y/n)" ANSWER
+	if [[ "$ANSWER" == 'y' ]] || [[ "$ANSWER" == 'yes' ]]; then
+		sleep 1
+
+		read -e -p "请输入主机名：" HOSTNAME
+		read -e -p "请输入系统密码：" SYS_PASSWORD
+		read -e -p "请输入SS密码：" SS_PASSWORD
+		read -e -p "请输入监控密码：" MT_PASSWORD
+
+		UpdatePackages
+		InstallPackages
+		ConfigSystem
+		SSHConfig
+		FirewallConfig
+		InstallSSlibev
+		ConfigPerson
+		InstallNginx
+		InstallPHP
+
+	else
+		echo '用户退出'
+		exit
+	fi
+}
+
 #软件包更新
 function UpdatePackages() {
 	cat <<EOF
@@ -204,39 +241,4 @@ EOF
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php
 }
 
-#================================================================================
-#脚本开始
-clear
-
-cat <<EOF
-################################################################################
-#
-# 呉真的服务器一键初始化脚本，请务必保证当前是一个全新的环境
-# 如有疑惑，请访问https://github.com/kuretru/Scripts-Collection
-#
-################################################################################
-EOF
-
-read -e -p "输入Y开始安装(y/n)" ANSWER
-if [[ "$ANSWER" == 'y' ]] || [[ "$ANSWER" == 'yes' ]]; then
-	sleep 1
-
-	read -e -p "请输入主机名：" HOSTNAME
-	read -e -p "请输入系统密码：" SYS_PASSWORD
-	read -e -p "请输入SS密码：" SS_PASSWORD
-	read -e -p "请输入监控密码：" MT_PASSWORD
-
-	UpdatePackages
-	InstallPackages
-	ConfigSystem
-	SSHConfig
-	FirewallConfig
-	InstallSSlibev
-	ConfigPerson
-	InstallNginx
-	InstallPHP
-
-else
-	echo '用户退出'
-	exit
-fi
+main
