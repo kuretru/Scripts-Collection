@@ -29,7 +29,8 @@ EOF
 		read -e -p "请输入主机名：" HOSTNAME
 		read -e -p "请输入系统密码：" SYS_PASSWORD
 		read -e -p "请输入SS密码：" SS_PASSWORD
-		read -e -p "请输入监控密码：" MT_PASSWORD
+		read -e -p "请输入监控密码：" MONITOR_PASSWORD
+		read -e -p "请输入SSMGR密码：" SSMGR_PASSWORD
 
 		UpdatePackages
 		InstallPackages
@@ -81,7 +82,8 @@ function InstallPackages() {
 EOF
 
 	yum -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
-		unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh
+		unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh \
+		sudo
 	yum clean all
 }
 
@@ -107,6 +109,11 @@ EOF
 	systemctl enable crond.service
 	systemctl enable chronyd.service
 	systemctl start chronyd.service
+	#配置DNS
+	cat <<EOF >/etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
 }
 
 #配置SSH
@@ -153,6 +160,9 @@ EOF
 	firewall-cmd --add-service=https --permanent
 	firewall-cmd --add-port=8023/tcp --permanent
 	firewall-cmd --add-port=8023/udp --permanent
+	firewall-cmd --add-port=4001/tcp --permanent
+	firewall-cmd --add-port=30000-30099/tcp --permanent
+	firewall-cmd --add-port=30000-30099/udp --permanent
 	systemctl restart firewalld.service
 }
 
@@ -257,6 +267,36 @@ EOF
 	sed -i "s/^;request_slowlog_timeout =.*$/request_slowlog_timeout = 2s/g" www.conf
 	cd /home/nginx/$HOSTNAME/public
 	wget https://api.inn-studio.com/download?id=xprober -O x.php
+}
+
+#安装Node.JS
+function InstallNode() {
+	cat <<EOF
+================================================================================
+
+============================== 开始安装Node.JS ==============================
+
+================================================================================
+EOF
+
+	curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+	yum -y install nodejs
+	npm i -g shadowsocks-manager --unsafe-perm
+	mkdir /root/.ssmgr
+	cat <<EOF >/root/.ssmgr/default.yml
+type: s
+
+shadowsocks:
+  address: 127.0.0.1:6001
+manager:
+  address: 0.0.0.0:4001
+  password: ''$SSMGR_PASSWORD''
+db: 'server.sqlite'
+EOF
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
+	chmod +x /etc/init.d/ssmgr
+	chmod +x /etc/rc.d/rc.local
+	echo "ss-manager -m chacha20-ietf-poly1305 -u --manager-address 127.0.0.1:6001" >>/etc/rc.d/rc.local
 }
 
 #个人配置
