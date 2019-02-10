@@ -213,10 +213,11 @@ EOF
 	cd /etc/nginx
 	mv nginx.conf nginx.conf.bk
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/nginx.conf -O nginx.conf
-	cd default.d
+	mkdir /etc/nginx/default.d
+	cd /etc/nginx/default.d
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/general.conf -O general.conf
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
-	cd ../conf.d
+	cd /etc/nginx/conf.d
 	mv default.conf default.conf.bk
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O default.conf
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
