@@ -207,8 +207,30 @@ enabled=1
 gpgkey=https://nginx.org/keys/nginx_signing.key
 EOF
 	yum-config-manager --enable nginx-mainline
-	yum -y install nginx certbot
+	yum -y install nginx certbot python2-certbot-nginx
 	systemctl enable nginx.service
+
+	cd /etc/nginx
+	mv nginx.conf nginx.conf.bk
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/nginx.conf -O nginx.conf
+	cd default.d
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/general.conf -O general.conf
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
+	cd ../conf.d
+	mv default.conf default.conf.bk
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O default.conf
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
+	sed -i "s/FIXME/$HOSTNAME/g" server.conf
+	mv server.conf $HOSTNAME.conf
+	mkdir /etc/nginx/ssl
+	chmod 750 /etc/nginx/ssl
+	cd /etc/nginx/ssl
+	openssl genrsa -out localhost.key 2048
+	openssl req -new -key localhost.key -out localhost.csr -subj "/C=US/ST=California/L=San Jose/O=Google/OU=Earth/CN=localhost"
+	openssl x509 -req -days 3650 -in localhost.csr -signkey localhost.key -out localhost.crt
+
+	mkdir -p /home/nginx/$HOSTNAME/public
+	chown -R nginx:nginx /home/nginx
 }
 
 #安装PHP
@@ -225,14 +247,15 @@ EOF
 	rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
 	yum -y install php72u-fpm-nginx php72u-cli php72u-mysqlnd php72u-json php72u-xml
 	systemctl enable php-fpm.service
+
 	cd /etc/php-fpm.d
 	sed -i "s/^pm.max_children =.*$/pm.max_children = 2/g" www.conf
 	sed -i "s/^pm.start_servers =.*$/pm.start_servers = 1/g" www.conf
 	sed -i "s/^pm.min_spare_servers =.*$/pm.min_spare_servers = 1/g" www.conf
 	sed -i "s/^pm.max_spare_servers =.*$/pm.max_spare_servers = 2/g" www.conf
 	sed -i "s/^;request_slowlog_timeout =.*$/request_slowlog_timeout = 2s/g" www.conf
-	cd /usr/share/nginx/html
-	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php
+	cd /home/nginx/$HOSTNAME/public
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php -O tz.php
 }
 
 #个人配置
