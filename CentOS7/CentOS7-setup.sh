@@ -245,7 +245,7 @@ EOF
 
 	yum -y install https://centos7.iuscommunity.org/ius-release.rpm
 	rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
-	yum -y install php72u-fpm-nginx php72u-cli php72u-mysqlnd php72u-json php72u-xml
+	yum -y install php72u-fpm-nginx php72u-cli php72u-mysqlnd php72u-json php72u-xml php72u-mbstring
 	systemctl enable php-fpm.service
 
 	cd /etc/php-fpm.d
@@ -255,7 +255,7 @@ EOF
 	sed -i "s/^pm.max_spare_servers =.*$/pm.max_spare_servers = 2/g" www.conf
 	sed -i "s/^;request_slowlog_timeout =.*$/request_slowlog_timeout = 2s/g" www.conf
 	cd /home/nginx/$HOSTNAME/public
-	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/tz.php -O tz.php
+	wget https://api.inn-studio.com/download?id=xprober -O x.php
 }
 
 #个人配置
