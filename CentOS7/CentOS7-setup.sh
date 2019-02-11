@@ -290,12 +290,9 @@ EOF
 	sed -i "s/^USER =/USER = \"$MONITOR_USERNAME\"/g" serverstatus-client.py
 	sed -i "s/^PASSWORD =/PASSWORD = \"$MONITOR_PASSWORD\"/g" serverstatus-client.py
 
-	mkdir /root/shell
-	cd /root/shell
-	wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/scripts/runSergate.sh -O runSergate.sh
-	chmod +x runSergate.sh
-	chmod +x /etc/rc.d/rc.local
-	echo "sh /root/shell/runSergate.sh" >>/etc/rc.d/rc.local
+	cd /usr/lib/systemd/system/
+	wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/scripts/serverstatus.service -O serverstatus.service
+	systemctl enable serverstatus.service
 }
 
 #安装Node.JS
@@ -324,6 +321,7 @@ db: 'server.sqlite'
 EOF
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
 	chmod +x /etc/init.d/ssmgr
+	chmod +x /etc/rc.d/rc.local
 	echo "ss-manager -m chacha20-ietf-poly1305 -u --manager-address 127.0.0.1:6001" >>/etc/rc.d/rc.local
 }
 
