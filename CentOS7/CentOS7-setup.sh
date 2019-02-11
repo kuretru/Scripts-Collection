@@ -29,6 +29,7 @@ EOF
 		read -e -p "请输入主机名：" HOSTNAME
 		read -e -p "请输入系统密码：" SYS_PASSWORD
 		read -e -p "请输入SS密码：" SS_PASSWORD
+		read -e -p "请输入监控用户名：" MONITOR_USERNAME
 		read -e -p "请输入监控密码：" MONITOR_PASSWORD
 		read -e -p "请输入SSMGR密码：" SSMGR_PASSWORD
 
@@ -40,6 +41,8 @@ EOF
 		InstallSSlibev
 		InstallNginx
 		InstallPHP
+		InstalMonitor
+		InstallNode
 		ConfigPerson
 
 		cat <<EOF
@@ -269,6 +272,32 @@ EOF
 	wget https://api.inn-studio.com/download?id=xprober -O x.php
 }
 
+#安装ServerStatus云探针
+function InstalMonitor() {
+	cat <<EOF
+================================================================================
+
+============================== 开始安装云探针 ==============================
+
+================================================================================
+EOF
+
+	cd /usr/local/share
+	wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/clients/client-linux.py -O serverstatus-client.py
+	chmod +x serverstatus-client.py
+	sed -i "s/^SERVER =/SERVER = \"monitor.kuretru.com\"/g" serverstatus-client.py
+	sed -i "s/^PORT =/PORT = 8099/g" serverstatus-client.py
+	sed -i "s/^USER =/USER = \"$MONITOR_USERNAME\"/g" serverstatus-client.py
+	sed -i "s/^PASSWORD =/PASSWORD = \"$MONITOR_PASSWORD\"/g" serverstatus-client.py
+
+	mkdir /root/shell
+	cd /root/shell
+	wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/scripts/runSergate.sh -O runSergate.sh
+	chmod +x runSergate.sh
+	chmod +x /etc/rc.d/rc.local
+	echo "sh /root/shell/runSergate.sh" >>/etc/rc.d/rc.local
+}
+
 #安装Node.JS
 function InstallNode() {
 	cat <<EOF
@@ -295,7 +324,6 @@ db: 'server.sqlite'
 EOF
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
 	chmod +x /etc/init.d/ssmgr
-	chmod +x /etc/rc.d/rc.local
 	echo "ss-manager -m chacha20-ietf-poly1305 -u --manager-address 127.0.0.1:6001" >>/etc/rc.d/rc.local
 }
 
