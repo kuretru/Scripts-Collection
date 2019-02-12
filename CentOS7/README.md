@@ -7,6 +7,8 @@
 * 基本系统配置(SSH、防火墙)
 * 个人配置
 * 配置一个自带探针的虚拟主机
+* 云探针、X探针
+* Shadowsocks-manage ssmgr管理服务端
 ##### 使用方法
 ```
 sh -c "$(wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/CentOS7/CentOS7-setup.sh -O -)"
