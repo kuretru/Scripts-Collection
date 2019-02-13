@@ -285,10 +285,10 @@ EOF
 	cd /usr/local/share
 	wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/clients/client-linux.py -O serverstatus-client.py
 	chmod +x serverstatus-client.py
-	sed -i "s/^SERVER =/SERVER = \"monitor.kuretru.com\"/g" serverstatus-client.py
-	sed -i "s/^PORT =/PORT = 8099/g" serverstatus-client.py
-	sed -i "s/^USER =/USER = \"$MONITOR_USERNAME\"/g" serverstatus-client.py
-	sed -i "s/^PASSWORD =/PASSWORD = \"$MONITOR_PASSWORD\"/g" serverstatus-client.py
+	sed -i "s/^SERVER =.*$/SERVER = \"monitor.kuretru.com\"/g" serverstatus-client.py
+	sed -i "s/^PORT =.*$/PORT = 8099/g" serverstatus-client.py
+	sed -i "s/^USER =.*$/USER = \"$MONITOR_USERNAME\"/g" serverstatus-client.py
+	sed -i "s/^PASSWORD =.*$/PASSWORD = \"$MONITOR_PASSWORD\"/g" serverstatus-client.py
 
 	cd /usr/lib/systemd/system/
 	wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/scripts/serverstatus.service -O serverstatus.service
@@ -316,13 +316,14 @@ shadowsocks:
   address: 127.0.0.1:6001
 manager:
   address: 0.0.0.0:4001
-  password: ''$SSMGR_PASSWORD''
+  password: '$SSMGR_PASSWORD'
 db: 'server.sqlite'
 EOF
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
 	chmod +x /etc/init.d/ssmgr
+	chkconfig ssmgr on
 	chmod +x /etc/rc.d/rc.local
-	echo "ss-manager -m chacha20-ietf-poly1305 -u --manager-address 127.0.0.1:6001" >>/etc/rc.d/rc.local
+	echo "ss-manager -m chacha20-ietf-poly1305 -u --manager-address 127.0.0.1:6001 &" >>/etc/rc.d/rc.local
 }
 
 #个人配置
