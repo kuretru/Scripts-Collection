@@ -1,0 +1,18 @@
+[Unit]
+Description=vlmcsd
+Documentation=https://forums.mydigitallife.net/threads/emulated-kms-servers-on-non-windows-platforms.50234/
+Wants=network.target
+After=syslog.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/vlmcsd.pid
+ExecStart=/usr/local/vlmcsd/vlmcsd -l /var/log/vlmcsd.log -p /var/run/vlmcsd.pid
+ExecReload=/bin/kill -SIGHUP $MAINPID
+ExecStop=/bin/kill -SIGTERM $MAINPID
+Restart=on-failure
+RestartSec=30s
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
