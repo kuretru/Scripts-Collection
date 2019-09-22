@@ -230,15 +230,19 @@ EOF
 	cd /etc/nginx/default.d
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/general.conf -O general.conf
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
+	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
 	cd /etc/nginx/conf.d
 	mv default.conf default.conf.bk
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O default.conf
 	wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
+	sed -i "s/FIXME/$IPV4/g" default.conf
 	sed -i "s/FIXME/$HOSTNAME/g" server.conf
 	mv server.conf $HOSTNAME.conf
 	mkdir /etc/nginx/ssl
 	chmod 750 /etc/nginx/ssl
 	cd /etc/nginx/ssl
+	openssl dhparam -out /etc/nginx/dhparam.pem 2048
 	openssl genrsa -out localhost.key 2048
 	openssl req -new -key localhost.key -out localhost.csr -subj "/C=US/ST=California/L=San Jose/O=Google/OU=Earth/CN=localhost"
 	openssl x509 -req -days 3650 -in localhost.csr -signkey localhost.key -out localhost.crt
