@@ -236,7 +236,7 @@ EOF
     mv default.conf default.conf.bk
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O _default.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
-    sed -i "s/FIXME/$IPV4/g" default.conf
+    sed -i "s/FIXME/$IPV4/g" _default.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
     mv server.conf $HOSTNAME.conf
     mkdir /etc/nginx/ssl
