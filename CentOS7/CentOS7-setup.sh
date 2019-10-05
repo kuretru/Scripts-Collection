@@ -263,7 +263,7 @@ EOF
 
     yum -y install https://centos7.iuscommunity.org/ius-release.rpm
     rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
-    yum -y install php72u-fpm-nginx php72u-cli php72u-mysqlnd php72u-json php72u-xml php72u-mbstring
+    yum -y install php73-fpm php73-cli php73-mysqlnd php73-gd php73-xml php73-json
     systemctl enable php-fpm.service
 
     cd /etc/php-fpm.d
