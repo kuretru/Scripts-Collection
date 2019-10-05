@@ -244,7 +244,7 @@ EOF
     cd /etc/nginx/ssl
     openssl dhparam -out /etc/nginx/dhparam.pem 2048
     openssl genrsa -out localhost.key 2048
-    openssl req -new -key localhost.key -out localhost.csr -subj "/C=US/ST=California/L=San Jose/O=Google/OU=Earth/CN=localhost"
+    openssl req -new -key localhost.key -out localhost.csr -subj "/C=US/ST=California/L=San Jose/O=Google/OU=Earth/CN=$IPV4"
     openssl x509 -req -days 3650 -in localhost.csr -signkey localhost.key -out localhost.crt
 
     mkdir -p /home/nginx/$HOSTNAME/public
