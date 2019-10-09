@@ -86,7 +86,7 @@ EOF
 
     yum -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
         unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh \
-        sudo
+        sudo mailx
     yum clean all
 }
 
