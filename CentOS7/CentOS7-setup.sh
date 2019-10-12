@@ -232,6 +232,10 @@ EOF
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
+    ce /etc/nginx/modules
+    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/ngx_http_brotli_filter_module.so -O ngx_http_brotli_filter_module.so
+    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/ngx_http_brotli_static_module.so -O ngx_http_brotli_static_module.so
+    chmod 755 *.so
     cd /etc/nginx/conf.d
     mv default.conf default.conf.bk
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O _default.conf
