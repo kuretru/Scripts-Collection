@@ -4,7 +4,7 @@
 # Description:  服务器一键初始化脚本
 # Author:       呉真 < kuretru@gmail.com >
 # Github:       https://github.com/kuretru/Scripts-Collection
-# Version:      1.1.190209
+# Version:      1.2.191012
 #================================================================================
 
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
