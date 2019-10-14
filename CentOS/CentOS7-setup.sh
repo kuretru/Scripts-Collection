@@ -4,7 +4,7 @@
 # Description:  服务器一键初始化脚本
 # Author:       呉真 < kuretru@gmail.com >
 # Github:       https://github.com/kuretru/Scripts-Collection
-# Version:      1.2.191012
+# Version:      1.2.191014
 #================================================================================
 
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
@@ -232,10 +232,6 @@ EOF
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
-    cd /etc/nginx/modules
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/ngx_http_brotli_filter_module.so.el7 -O ngx_http_brotli_filter_module.so
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/ngx_http_brotli_static_module.so.el7 -O ngx_http_brotli_static_module.so
-    chmod 755 *.so
     cd /etc/nginx/conf.d
     mv default.conf default.conf.bk
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O _default.conf
@@ -243,6 +239,10 @@ EOF
     sed -i "s/FIXME/$IPV4/g" _default.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
     mv server.conf $HOSTNAME.conf
+
+    wget http://kuretru.github.io/packages/kuretru.repo -O /etc/yum.repos.d/kuretru.repo
+    yum -y install nginx-module-brotli
+
     mkdir /etc/nginx/ssl
     chmod 750 /etc/nginx/ssl
     cd /etc/nginx/ssl
