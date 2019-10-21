@@ -251,6 +251,8 @@ EOF
     openssl req -new -key localhost.key -out localhost.csr -subj "/C=US/ST=California/L=San Jose/O=Google/OU=Earth/CN=$IPV4"
     openssl x509 -req -days 3650 -in localhost.csr -signkey localhost.key -out localhost.crt
 
+    echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew" | sudo tee -a /etc/crontab > /dev/null
+
     mkdir -p /home/nginx/$HOSTNAME/public
     chown -R nginx:nginx /home/nginx
 }
