@@ -180,7 +180,7 @@ function InstallSSlibev() {
 EOF
 
     cd /etc/yum.repos.d
-    wget https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo
+    wget https://copr.fedorainfracloud.org/coprs/kuretru/shadowsocks/repo/epel-7/kuretru-shadowsocks-epel-7.repo
     yum -y install shadowsocks-libev
     systemctl enable shadowsocks-libev.service
     server_value="\"0.0.0.0\""
