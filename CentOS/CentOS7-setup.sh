@@ -315,7 +315,7 @@ function InstallNode() {
 ================================================================================
 EOF
 
-    curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     yum -y install nodejs
     npm i -g shadowsocks-manager --unsafe-perm
     mkdir /root/.ssmgr
