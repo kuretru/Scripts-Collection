@@ -180,7 +180,7 @@ function InstallSSlibev() {
 EOF
 
     cd /etc/yum.repos.d
-    wget https://copr.fedorainfracloud.org/coprs/kuretru/shadowsocks/repo/epel-7/kuretru-shadowsocks-epel-7.repo
+    wget https://copr.fedorainfracloud.org/coprs/kuretru/shadowsocks/repo/epel-7/kuretru-shadowsocks-epel-7.repo -O kuretru-shadowsocks-epel-7.repo
     yum -y install shadowsocks-libev
     systemctl enable shadowsocks-libev.service
     server_value="\"0.0.0.0\""
@@ -210,21 +210,12 @@ function InstallNginx() {
 ================================================================================
 EOF
 
-    yum -y install yum-utils
-    cat <<EOF >/etc/yum.repos.d/nginx.repo
-[nginx-mainline]
-name=nginx mainline repo
-baseurl=http://nginx.org/packages/mainline/centos/\$releasever/\$basearch/
-gpgcheck=1
-enabled=1
-gpgkey=https://nginx.org/keys/nginx_signing.key
-EOF
-    yum-config-manager --enable nginx-mainline
-    yum -y install nginx certbot python2-certbot-nginx
+    cd /etc/yum.repos.d/
+    wget https://copr.fedorainfracloud.org/coprs/kuretru/nginx/repo/epel-7/kuretru-nginx-epel-7.repo -O kuretru-nginx-epel-7.repo
+    yum -y install nginx nginx-module-brotli certbot python2-certbot-nginx
     systemctl enable nginx.service
 
     cd /etc/nginx
-    mv nginx.conf nginx.conf.bk
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/nginx.conf -O nginx.conf
     mkdir /etc/nginx/default.d
     cd /etc/nginx/default.d
@@ -233,15 +224,11 @@ EOF
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
     cd /etc/nginx/conf.d
-    mv default.conf default.conf.bk
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O _default.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
     sed -i "s/FIXME/$IPV4/g" _default.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
     mv server.conf $HOSTNAME.conf
-
-    wget http://kuretru.github.io/packages/kuretru.repo -O /etc/yum.repos.d/kuretru.repo
-    yum -y install nginx-module-brotli
 
     mkdir /etc/nginx/ssl
     chmod 750 /etc/nginx/ssl
