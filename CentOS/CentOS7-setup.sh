@@ -4,7 +4,7 @@
 # Description:  服务器一键初始化脚本
 # Author:       呉真 < kuretru@gmail.com >
 # Github:       https://github.com/kuretru/Scripts-Collection
-# Version:      1.2.191014
+# Version:      1.3.191207
 #================================================================================
 
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
@@ -187,16 +187,16 @@ EOF
     if [ $IPv6 ]; then
         server_value="[\"[::0]\",\"0.0.0.0\"]"
     fi
-    cat <<-EOF >/etc/shadowsocks-libev/config.json
-        {
-            "server":${server_value},
-            "server_port":8023,
-            "local_port":1080,
-            "password":"${SS_PASSWORD}",
-            "timeout":60,
-            "method":"chacha20-ietf-poly1305"
-        }
-    EOF
+    cat <<EOF >/etc/shadowsocks-libev/config.json
+{
+    "server":${server_value},
+    "server_port":8023,
+    "local_port":1080,
+    "password":"${SS_PASSWORD}",
+    "timeout":60,
+    "method":"chacha20-ietf-poly1305"
+}
+EOF
     systemctl restart shadowsocks-libev.service
 }
 
