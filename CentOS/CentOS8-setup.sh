@@ -87,7 +87,7 @@ EOF
 
     dnf -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
         unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh \
-        sudo mailx
+        sudo mailx python36
     dnf clean all
 }
 
@@ -285,7 +285,6 @@ EOF
     cd /etc/php-fpm.d
     sed -i "s/^user =.*$/user = nginx/g" www.conf
     sed -i "s/^group =.*$/group = nginx/g" www.conf
-
     sed -i "s/^pm.max_children =.*$/pm.max_children = 2/g" www.conf
     sed -i "s/^pm.start_servers =.*$/pm.start_servers = 1/g" www.conf
     sed -i "s/^pm.min_spare_servers =.*$/pm.min_spare_servers = 1/g" www.conf
@@ -328,8 +327,8 @@ function InstallNode() {
 ================================================================================
 EOF
 
-    curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-    yum -y install nodejs
+    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    dnf -y install nodejs
     npm i -g shadowsocks-manager --unsafe-perm
     mkdir /root/.ssmgr
     cat <<EOF >/root/.ssmgr/default.yml
