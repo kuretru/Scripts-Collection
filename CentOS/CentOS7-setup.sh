@@ -224,9 +224,8 @@ EOF
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
     cd /etc/nginx/conf.d
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O _default.conf
+    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O default.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
-    sed -i "s/FIXME/$IPV4/g" _default.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
     mv server.conf $HOSTNAME.conf
 
