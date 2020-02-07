@@ -4,7 +4,7 @@
 # Description:  服务器一键初始化脚本
 # Author:       呉真 < kuretru@gmail.com >
 # Github:       https://github.com/kuretru/Scripts-Collection
-# Version:      1.0.191012
+# Version:      1.0.200207
 #================================================================================
 
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
@@ -227,7 +227,6 @@ EOF
     systemctl enable nginx.service
 
     cd /etc/nginx
-    mv nginx.conf nginx.conf.bk
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/nginx.conf -O nginx.conf
     mkdir /etc/nginx/default.d
     cd /etc/nginx/default.d
@@ -236,12 +235,11 @@ EOF
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
     cd /etc/nginx/conf.d
-    mv default.conf default.conf.bk
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O _default.conf
+    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O default.conf
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
-    sed -i "s/FIXME/$IPV4/g" _default.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
     mv server.conf $HOSTNAME.conf
+
     mkdir /etc/nginx/ssl
     chmod 750 /etc/nginx/ssl
     cd /etc/nginx/ssl
@@ -327,7 +325,6 @@ function InstallNode() {
 ================================================================================
 EOF
 
-    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     dnf -y install nodejs
     npm i -g shadowsocks-manager --unsafe-perm
     mkdir /root/.ssmgr
@@ -360,6 +357,12 @@ EOF
 
     cd /root
     sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+    sed -i "s/^ZSH_THEME=.*$/ZSH_THEME=\"af-magic\"/g" .zshrc
+    sed -i "s/^# DISABLE_UPDATE_PROMPT=/DISABLE_UPDATE_PROMPT=/g" .zshrc
+    sed -i "s/^# export UPDATE_ZSH_DAYS=13$/export UPDATE_ZSH_DAYS=7/g" .zshrc
+    sed -i "s/^# ENABLE_CORRECTION=/ENABLE_CORRECTION=/g" .zshrc
+    usermod -s /bin/zsh root
+
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/.vimrc
     #登录文本
     cat <<EOF >/etc/motd
