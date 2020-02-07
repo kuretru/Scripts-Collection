@@ -302,6 +302,8 @@ function InstalMonitor() {
 ================================================================================
 EOF
 
+    cd /usr/bin
+    ln -s python3 python
     cd /usr/local/share
     wget https://github.com/kuretru/ServerStatus/raw/master/clients/client-linux.py -O serverstatus-client.py
     chmod +x serverstatus-client.py
