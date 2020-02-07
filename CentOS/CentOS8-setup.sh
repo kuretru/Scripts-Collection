@@ -361,6 +361,7 @@ EOF
     sed -i "s/^# DISABLE_UPDATE_PROMPT=/DISABLE_UPDATE_PROMPT=/g" .zshrc
     sed -i "s/^# export UPDATE_ZSH_DAYS=13$/export UPDATE_ZSH_DAYS=7/g" .zshrc
     sed -i "s/^# ENABLE_CORRECTION=/ENABLE_CORRECTION=/g" .zshrc
+    echo "setopt no_nomatch" >> .zshrc
     usermod -s /bin/zsh root
 
     wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/.vimrc
