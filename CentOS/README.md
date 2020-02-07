@@ -18,8 +18,8 @@
 
 ```bash
 # For CentOS 7
-sh -c "$(wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/CentOS7/CentOS7-setup.sh -O -)"
+sh -c "$(wget https://github.com/kuretru/Scripts-Collection/raw/master/CentOS/CentOS7-setup.sh -O -)"
 
 # For CentOS 8
-sh -c "$(wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/CentOS7/CentOS8-setup.sh -O -)"
+sh -c "$(wget https://github.com/kuretru/Scripts-Collection/raw/master/CentOS/CentOS8-setup.sh -O -)"
 ```

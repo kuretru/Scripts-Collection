@@ -216,16 +216,16 @@ EOF
     systemctl enable nginx.service
 
     cd /etc/nginx
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/nginx.conf -O nginx.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/nginx.conf -O nginx.conf
     mkdir /etc/nginx/default.d
     cd /etc/nginx/default.d
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/general.conf -O general.conf
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/security.conf -O security.conf
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/proxy.conf -O proxy.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/general.conf -O general.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/security.conf -O security.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/proxy.conf -O proxy.conf
     cd /etc/nginx/conf.d
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/default.conf -O default.conf
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/nginx/server.conf -O server.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/default.conf -O default.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/server.conf -O server.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
     mv server.conf $HOSTNAME.conf
 
@@ -279,7 +279,7 @@ function InstalMonitor() {
 EOF
 
     cd /usr/local/share
-    wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/clients/client-linux.py -O serverstatus-client.py
+    wget https://github.com/kuretru/ServerStatus/raw/master/clients/client-linux.py -O serverstatus-client.py
     chmod +x serverstatus-client.py
     sed -i "s/^SERVER =.*$/SERVER = \"monitor.kuretru.com\"/g" serverstatus-client.py
     sed -i "s/^PORT =.*$/PORT = 8099/g" serverstatus-client.py
@@ -287,7 +287,7 @@ EOF
     sed -i "s/^PASSWORD =.*$/PASSWORD = \"$MONITOR_PASSWORD\"/g" serverstatus-client.py
 
     cd /usr/lib/systemd/system/
-    wget https://raw.githubusercontent.com/kuretru/ServerStatus/master/scripts/serverstatus.service -O serverstatus.service
+    wget https://github.com/kuretru/ServerStatus/raw/master/scripts/serverstatus.service -O serverstatus.service
     systemctl enable serverstatus.service
 }
 
@@ -315,7 +315,7 @@ manager:
   password: '$SSMGR_PASSWORD'
 db: 'server.sqlite'
 EOF
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
     chmod +x /etc/init.d/ssmgr
     chkconfig ssmgr on
     chmod +x /etc/rc.d/rc.local
@@ -334,7 +334,7 @@ EOF
 
     cd /root
     sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-    wget https://raw.githubusercontent.com/kuretru/Scripts-Collection/master/files/.vimrc
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/.vimrc
     #登录文本
     cat <<EOF >/etc/motd
 警告：你的IP已被记录，所有操作将会通告管理员！
