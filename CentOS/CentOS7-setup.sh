@@ -4,7 +4,7 @@
 # Description:  服务器一键初始化脚本
 # Author:       呉真 < kuretru@gmail.com >
 # Github:       https://github.com/kuretru/Scripts-Collection
-# Version:      1.3.191207
+# Version:      1.4.200207
 #================================================================================
 
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
@@ -334,6 +334,12 @@ EOF
 
     cd /root
     sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+    sed -i "s/^ZSH_THEME=.*$/ZSH_THEME=\"af-magic\"/g" .zshrc
+    sed -i "s/^# DISABLE_UPDATE_PROMPT=/DISABLE_UPDATE_PROMPT=/g" .zshrc
+    sed -i "s/^# export UPDATE_ZSH_DAYS=13$/export UPDATE_ZSH_DAYS=7/g" .zshrc
+    sed -i "s/^# ENABLE_CORRECTION=/ENABLE_CORRECTION=/g" .zshrc
+    echo "setopt no_nomatch" >> .zshrc
+
     wget https://github.com/kuretru/Scripts-Collection/raw/master/files/.vimrc
     #登录文本
     cat <<EOF >/etc/motd
