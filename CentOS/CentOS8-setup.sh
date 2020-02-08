@@ -87,7 +87,7 @@ EOF
 
     dnf -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
         unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh \
-        sudo mailx python36
+        sudo mailx python36 tar
     dnf clean all
 }
 
