@@ -222,6 +222,7 @@ baseurl=http://nginx.org/packages/mainline/centos/\$releasever/\$basearch/
 gpgcheck=1
 enabled=1
 gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
 EOF
     dnf -y install --disablerepo AppStream nginx
     systemctl enable nginx.service
