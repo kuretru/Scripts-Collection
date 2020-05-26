@@ -253,7 +253,7 @@ function InstallPHP() {
 ================================================================================
 EOF
 
-    yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+    yum -y install https://repo.ius.io/ius-release-el7.rpm
     rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
     yum -y install php73-fpm php73-cli php73-mysqlnd php73-gd php73-xml php73-json
     systemctl enable php-fpm.service
