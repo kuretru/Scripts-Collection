@@ -328,6 +328,8 @@ function InstallNode() {
 ================================================================================
 EOF
 
+    dnf -y module reset nodejs
+    dnf -y module enable nodejs:12
     dnf -y install nodejs
     npm i -g shadowsocks-manager --unsafe-perm
     mkdir /root/.ssmgr
