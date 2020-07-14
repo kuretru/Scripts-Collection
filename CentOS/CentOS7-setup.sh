@@ -189,12 +189,14 @@ EOF
     fi
     cat <<EOF >/etc/shadowsocks-libev/config.json
 {
-    "server":${server_value},
+    "listen":"0.0.0.0",
     "server_port":8023,
     "local_port":1080,
     "password":"${SS_PASSWORD}",
     "timeout":60,
-    "method":"chacha20-ietf-poly1305"
+    "method":"chacha20-ietf-poly1305",
+    "plugin":"v2ray-plugin",
+    "plugin_opts":"server;path=/ss/;host=${hostname}"
 }
 EOF
     systemctl restart shadowsocks-libev.service
@@ -255,10 +257,12 @@ EOF
 
     yum -y install https://repo.ius.io/ius-release-el7.rpm
     rpm --import /etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY
-    yum -y install php73-fpm php73-cli php73-mysqlnd php73-gd php73-xml php73-json
+    yum -y install php74-fpm php74-cli php74-mysqlnd php74-gd php74-xml php74-json
     systemctl enable php-fpm.service
 
     cd /etc/php-fpm.d
+    sed -i "s/^user =.*$/user = nginx/g" www.conf
+    sed -i "s/^group =.*$/group = nginx/g" www.conf
     sed -i "s/^pm.max_children =.*$/pm.max_children = 2/g" www.conf
     sed -i "s/^pm.start_servers =.*$/pm.start_servers = 1/g" www.conf
     sed -i "s/^pm.min_spare_servers =.*$/pm.min_spare_servers = 1/g" www.conf

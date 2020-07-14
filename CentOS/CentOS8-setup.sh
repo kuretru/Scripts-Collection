@@ -190,12 +190,14 @@ EOF
     fi
     cat <<EOF >/etc/shadowsocks-libev/config.json
 {
-    "server":${server_value},
+    "listen":"0.0.0.0",
     "server_port":8023,
     "local_port":1080,
     "password":"${SS_PASSWORD}",
     "timeout":60,
-    "method":"chacha20-ietf-poly1305"
+    "method":"chacha20-ietf-poly1305",
+    "plugin":"v2ray-plugin",
+    "plugin_opts":"server;path=/ss/;host=${hostname}"
 }
 EOF
     systemctl restart shadowsocks-libev.service
