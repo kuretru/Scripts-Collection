@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 dir="/tmp"
-cmd="/usr/bin/node /usr/bin/ssmgr -c /root/.ssmgr/default.yml"
+cmd="/usr/bin/node /usr/local/bin/ssmgr -c /root/.ssmgr/default.yml"
 user=""
 
 name="ssmgr"
