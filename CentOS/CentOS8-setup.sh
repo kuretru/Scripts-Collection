@@ -315,7 +315,7 @@ EOF
     sed -i "s/^USER =.*$/USER = \"$MONITOR_USERNAME\"/g" serverstatus-client.py
     sed -i "s/^PASSWORD =.*$/PASSWORD = \"$MONITOR_PASSWORD\"/g" serverstatus-client.py
 
-    cd /usr/lib/systemd/system/
+    cd /etc/systemd/system/
     wget https://github.com/kuretru/ServerStatus/raw/master/scripts/serverstatus.service -O serverstatus.service
     systemctl enable serverstatus.service
 }
