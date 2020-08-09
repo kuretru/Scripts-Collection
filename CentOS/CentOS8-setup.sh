@@ -197,7 +197,7 @@ EOF
     "timeout":60,
     "method":"chacha20-ietf-poly1305",
     "plugin":"v2ray-plugin",
-    "plugin_opts":"server;path=/ss/;host=${hostname}"
+    "plugin_opts":"server;path=/ss/;host=${HOSTNAME}"
 }
 EOF
     systemctl restart shadowsocks-libev.service
