@@ -51,11 +51,8 @@ def classroom(username: str, password: str, ip: str):
         'user_account': ',0,' + username,
         'user_password': password,
         'wlan_user_ip': ip,
-        'wlan_user_ipv6': '',
-        'wlan_user_mac': '000000000000',
-        'wlan_ac_ip': '',
-        'wlan_ac_name': '',
-        'jsVersion': '3.3.3',
+        'wlan_user_ipv6': '', 'wlan_user_mac': '000000000000',
+        'wlan_ac_ip': '', 'wlan_ac_name': '', 'jsVersion': '3.3.3',
         'v': '6222'
     }
     headers = {
@@ -99,10 +96,10 @@ def send_request(req):
 def get_ip_address(ifname: str):
     if ifname is None or ifname == '':
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("223.5.5.5", 53))
+        s.connect(('223.5.5.5', 53))
         return s.getsockname()[0]
     else:
-        return os.popen('ip addr show ' + ifname).read().split("inet ")[1].split("/")[0]
+        return os.popen('ip addr show ' + ifname).read().split('inet ')[1].split('/')[0]
 
 
 if __name__ == '__main__':
