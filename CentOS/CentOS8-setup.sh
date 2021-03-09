@@ -69,7 +69,7 @@ function UpdatePackages() {
 ================================================================================
 EOF
 
-    echo "fastestmirror=true" >> /etc/dnf/dnf.conf
+    echo "fastestmirror=True" >> /etc/dnf/dnf.conf
     dnf clean all
     dnf makecache
     dnf -y update
@@ -87,7 +87,7 @@ EOF
 
     dnf -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
         unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh \
-        sudo mailx python36 tar
+        sudo mailx python38 tar
     dnf clean all
 }
 
@@ -331,7 +331,7 @@ function InstallNode() {
 EOF
 
     dnf -y module reset nodejs
-    dnf -y module enable nodejs:12
+    dnf -y module enable nodejs:14
     dnf -y install nodejs
     npm i -g shadowsocks-manager --unsafe-perm
     mkdir /root/.ssmgr
