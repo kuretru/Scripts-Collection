@@ -19,7 +19,8 @@ SESSION_ID = '0squo4034j8e86jd5g7vj69490'
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 
 
-def dormitory(username: str, password: str, ip: str):
+def dormitory(username: str, password: str, ip: str, mode: str):
+    proto = '@localpfyx' if mode == 'dormitory' else '@cmccpfyx'
     params = {
         'c': 'ACSetting', 'a': 'Login', 'protocol': 'http:', 'hostname': '192.168.210.111',
         'iTermType': '1', 'mac': '000000000000',
@@ -32,7 +33,7 @@ def dormitory(username: str, password: str, ip: str):
         'User-Agent': UA
     }
     body = {
-        'DDDDD': ',0,' + username + '@localpfyx',
+        'DDDDD': ',0,' + username + proto,
         'upass': password,
         'R1': '0', 'R2': '0', 'R6': '0', 'para': '00', '0MKKey': '123456',
         'buttonClicked': '', 'redirect_url': '', 'err_flag': '', 'username': '',
@@ -45,7 +46,7 @@ def dormitory(username: str, password: str, ip: str):
     send_request(req)
 
 
-def classroom(username: str, password: str, ip: str):
+def wlan(username: str, password: str, ip: str):
     params = {
         'c': 'Portal', 'a': 'login', 'callback': 'dr1003', 'login_method': '1',
         'user_account': ',0,' + username,
@@ -53,7 +54,7 @@ def classroom(username: str, password: str, ip: str):
         'wlan_user_ip': ip,
         'wlan_user_ipv6': '', 'wlan_user_mac': '000000000000',
         'wlan_ac_ip': '', 'wlan_ac_name': '', 'jsVersion': '3.3.3',
-        'v': '6222'
+        'v': '1234'
     }
     headers = {
         'Cookie': 'PHPSESSID=%s' % SESSION_ID,
@@ -96,7 +97,7 @@ def send_request(req):
 def get_ip_address(ifname: str):
     if ifname is None or ifname == '':
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(('223.5.5.5', 53))
+        s.connect(('172.16.7.10', 53))
         return s.getsockname()[0]
     else:
         return os.popen('ip addr show ' + ifname).read().split('inet ')[1].split('/')[0]
@@ -104,17 +105,17 @@ def get_ip_address(ifname: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='浙江工业大学Dr.Com客户端 v1.0')
-    parser.add_argument('--mode', help='模式，寝室楼(dormitory, 默认)，教学楼(classroom)，实验室(laboratory)', default='dormitory')
+    parser.add_argument('--mode', help='模式，寝室楼连实验室(dormitory, 默认)，寝室楼连移动(cmcc)，无线Wi-Fi(wlan)，实验室(laboratory)', default='dormitory')
     parser.add_argument('--interface', help='网络接口，(e.g. wan, eth0, ens33)')
     parser.add_argument('--username', help='用户名', required=True)
     parser.add_argument('--password', help='密码', required=True)
     args = parser.parse_args()
 
     ip = get_ip_address(args.interface)
-    if args.mode == 'dormitory':
-        dormitory(args.username, args.password, ip)
-    elif args.mode == 'classroom':
-        classroom(args.username, args.password, ip)
+    if args.mode == 'dormitory' or args.mode == 'cmcc':
+        dormitory(args.username, args.password, ip, args.mode)
+    elif args.mode == 'wlan':
+        wlan(args.username, args.password, ip)
     elif args.mode == 'laboratory':
         laboratory(args.username, args.password)
     else:
