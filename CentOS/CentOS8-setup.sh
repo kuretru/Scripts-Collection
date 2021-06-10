@@ -182,7 +182,7 @@ EOF
 
     cd /etc/yum.repos.d/
     wget https://copr.fedorainfracloud.org/coprs/kuretru/shadowsocks/repo/epel-8/kuretru-shadowsocks-epel-8.repo
-    yum -y install shadowsocks-libev
+    dnf -y install shadowsocks-libev
     systemctl enable shadowsocks-libev.service
     server_value="\"0.0.0.0\""
     if [ $IPv6 ]; then
@@ -258,12 +258,16 @@ EOF
     wget https://copr.fedorainfracloud.org/coprs/kuretru/nginx/repo/epel-8/kuretru-nginx-epel-8.repo
     dnf -y install nginx-module-brotli
 
-    cd /tmp/
-    wget https://dl.eff.org/certbot-auto
-    mv certbot-auto /usr/local/bin/certbot-auto
-    chown root /usr/local/bin/certbot-auto
-    chmod 0755 /usr/local/bin/certbot-auto
-    echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && /usr/local/bin/certbot-auto renew" | sudo tee -a /etc/crontab > /dev/null
+    dnf install snapd
+    systemctl enable --now snapd.socket
+    systemctl enable snapd
+    systemctl start snapd
+    ln -s /var/lib/snapd/snap /snap
+
+    snap install core
+    snap refresh core
+    snap install --classic certbot
+    ln -s /snap/bin/certbot /usr/bin/certbot
 }
 
 #安装PHP
@@ -279,7 +283,7 @@ EOF
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
     dnf -y install yum-utils
     dnf -y module reset php
-    dnf -y module install php:remi-7.4
+    dnf -y module install php:remi-8.0
     dnf -y install php-mysqlnd php-gd
     systemctl enable php-fpm.service
 
@@ -293,6 +297,7 @@ EOF
     sed -i "s/^;request_slowlog_timeout =.*$/request_slowlog_timeout = 2s/g" www.conf
     cd /home/nginx/$HOSTNAME/public
     wget https://api.inn-studio.com/download?id=xprober -O x.php
+    chown nginx:nginx x.php
 }
 
 #安装ServerStatus云探针
