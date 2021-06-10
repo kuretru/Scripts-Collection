@@ -354,7 +354,7 @@ EOF
     chmod +x /etc/init.d/ssmgr
     chkconfig ssmgr on
     chmod +x /etc/rc.d/rc.local
-    echo "ss-manager -m chacha20-ietf-poly1305 -u --manager-address 127.0.0.1:6001 &" >>/etc/rc.d/rc.local
+    echo "ss-manager -c /etc/shadowsocks-libev/config.json -u --manager-address 127.0.0.1:6001 &" >>/etc/rc.d/rc.local
 }
 
 #个人配置
