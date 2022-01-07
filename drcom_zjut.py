@@ -10,6 +10,7 @@ URL: https://github.com/kuretru/Scripts-Collection
 """
 
 import argparse
+import json
 import os
 import socket
 import sys
@@ -89,12 +90,24 @@ def laboratory(username: str, password: str, ip: str):
 def send_request(req):
     response = request.urlopen(req)
     html = response.read().decode('gb2312')
+    success = False
     left = html.find('<title>')
     right = html.find('</title>')
-    if left == -1 or right == -1:
+    if left != -1 and right != -1:
+        success = True
+        title = html[left + 7:right]
+        print(title)
+    elif html.find('dr1003(') != -1:
+        success = True
+        left = html.find('{')
+        right = html.find('}')
+        text = html[left:right + 1]
+        result = json.loads(text)
+        print(result)
+        print('\n')
+    if not success:
         print('发送请求失败')
-    title = html[left + 7:right]
-    print(title)
+
 
 
 def get_ip_address(ifname: str):
