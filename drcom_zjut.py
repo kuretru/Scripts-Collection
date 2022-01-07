@@ -66,20 +66,23 @@ def wlan(username: str, password: str, ip: str):
     send_request(req)
 
 
-def laboratory(username: str, password: str):
+def laboratory(username: str, password: str, ip: str):
+    params = {
+        'c': 'Portal', 'a': 'login', 'callback': 'dr1003', 'login_method': '1',
+        'user_account': ',0,' + username,
+        'user_password': password,
+        'wlan_user_ip': ip,
+        'wlan_user_ipv6': '', 'wlan_user_mac': '000000000000',
+        'wlan_ac_ip': '192.168.6.36', 'wlan_ac_name': 'ME60', 'jsVersion': '3.3.3',
+        'v': '1234'
+    }
     headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': 'PHPSESSID=%s' % SESSION_ID,
         'User-Agent': UA
     }
-    body = {
-        'DDDDD': username,
-        'upass': password,
-        'R1': '0', 'R2': '', 'R6': '0', 'para': '00', '0MKKey': '123456'
-    }
 
-    url = 'http://192.168.6.1/a70.htm'
-    data = parse.urlencode(body).encode('utf-8')
-    req = request.Request(url, data=data, headers=headers, method='POST')
+    url = 'http://192.168.6.1:801/eportal/?' + parse.urlencode(params)
+    req = request.Request(url, headers=headers, method='GET')
     send_request(req)
 
 
@@ -117,7 +120,7 @@ if __name__ == '__main__':
     elif args.mode == 'wlan':
         wlan(args.username, args.password, ip)
     elif args.mode == 'laboratory':
-        laboratory(args.username, args.password)
+        laboratory(args.username, args.password, ip)
     else:
         print('unknown mode')
         sys.exit(2)
