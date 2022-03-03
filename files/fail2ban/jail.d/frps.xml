@@ -1,0 +1,9 @@
+[frps]
+enabled = true
+filter = frps
+logpath = /var/log/frps.log
+logtimezone = UTC+0800
+bantime = 1d
+findtime = 5m
+maxretry = 10
+maxmatches = 0
