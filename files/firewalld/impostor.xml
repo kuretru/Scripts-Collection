@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>impostor</short>
+  <description>An open source reimplementation of the Among Us Server</description>
+  <port protocol="udp" port="22023"/>
+</service>

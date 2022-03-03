@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>tailscale</short>
+  <description>A secure network that just works</description>
+  <port protocol="udp" port="41641"/>
+</service>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>zerotier</short>
+  <description>ZeroTier is a software defined networking layer for Earth</description>
+  <port protocol="tcp" port="9993"/>
+  <port protocol="udp" port="9993"/>
+</service>
