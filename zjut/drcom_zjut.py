@@ -4,7 +4,7 @@
 """
 ZJUT DrCom Python Client
 Version: 1.1
-Required: Python 3.5(+)
+Required: Python 3.5(+) python3-base,python3-urllib,python3-idna
 Author: Eugene Wu <kuretru@gmail.com>
 URL: https://github.com/kuretru/Scripts-Collection
 """
