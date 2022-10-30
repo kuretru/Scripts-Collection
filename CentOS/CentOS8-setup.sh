@@ -87,7 +87,7 @@ EOF
 
     dnf -y install vim wget curl tree lsof epel-release bind-utils xz mtr \
         unzip crontabs git make gcc gcc-c++ firewalld chrony rsyslog zsh \
-        sudo mailx python38 tar
+        sudo mailx python39 tar screen
     dnf clean all
 }
 
@@ -283,8 +283,9 @@ EOF
     dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
     dnf -y install yum-utils
     dnf -y module reset php
-    dnf -y module install php:remi-8.0
+    dnf -y module install php:remi-8.1
     dnf -y install php-mysqlnd php-gd
+    chmod -R root:nginx /var/lib/php/*
     systemctl enable php-fpm.service
 
     cd /etc/php-fpm.d
@@ -336,7 +337,7 @@ function InstallNode() {
 EOF
 
     dnf -y module reset nodejs
-    dnf -y module enable nodejs:14
+    dnf -y module enable nodejs:16
     dnf -y install nodejs
     npm i -g shadowsocks-manager --unsafe-perm
     mkdir /root/.ssmgr
