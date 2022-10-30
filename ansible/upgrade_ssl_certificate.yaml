@@ -1,0 +1,16 @@
+---
+- hosts: router
+  gather_facts: no
+  remote_user: root
+  vars:
+    certificate: ~/.acme.sh/*.kuretru.com/fullchain.cer
+    private_key: ~/.acme.sh/*.kuretru.com/*.kuretru.com.key
+  tasks:
+  - name: upload certificate
+    local_action: command scp -O {{ certificate }} {{ inventory_hostname }}:/etc/uhttpd.crt
+  - name: upload private key
+    local_action: command scp -O {{ private_key }} {{ inventory_hostname }}:/etc/uhttpd.key
+  - name: change mode for private key
+    raw: chmod 640 /etc/uhttpd.key
+  - name: restart uhttpd
+    raw: /etc/init.d/uhttpd restart
