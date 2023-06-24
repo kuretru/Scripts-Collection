@@ -2,7 +2,7 @@
 # Bark Client for Python
 # Packages required: pycryptodome
 # Author: 呉真 < kuretru@gmail.com >
-# Github: https://github.com/kuretru/Scripts-Collection/blob/master/python/bark.py
+# Github: https://github.com/kuretru/Scripts-Collection/blob/master/Python/bark.py
 # Version: 1.0.230615
 
 import base64
