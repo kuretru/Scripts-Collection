@@ -1,8 +1,8 @@
 # CentOS相关脚本
 
-## CentOS-setup.sh
+## CentOS-setup.sh/Rocky-setup.sh
 
-将全新系统一键初始化，支持CentOS 7/8。
+将全新系统一键初始化，支持CentOS/RHEL 7/8，Rocky Linux 9。
 
 ### 功能
 
@@ -22,4 +22,7 @@ sh -c "$(wget https://github.com/kuretru/Scripts-Collection/raw/master/CentOS/Ce
 
 # For CentOS 8
 sh -c "$(wget https://github.com/kuretru/Scripts-Collection/raw/master/CentOS/CentOS8-setup.sh -O -)"
+
+# For Rocky Linux 9
+sh -c "$(wget https://github.com/kuretru/Scripts-Collection/raw/master/CentOS/Rocky9-setup.sh -O -)"
 ```

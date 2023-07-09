@@ -4,12 +4,11 @@
 # Description:  服务器一键初始化脚本
 # Author:       呉真 < kuretru@gmail.com >
 # Github:       https://github.com/kuretru/Scripts-Collection
-# Version:      1.0.230216
+# Version:      1.1.230709
 #================================================================================
 
 IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
 IPv6=$(wget -qO- -t1 -T2 ipv6.icanhazip.com)
-V2RAY_PLUGIN_VERSION=v1.3.2
 
 function main() {
     clear
@@ -39,10 +38,10 @@ EOF
         ConfigSystem
         SSHConfig
         FirewallConfig
+        InstallDocker
         InstallSSlibev
         InstallNginx
         InstallPHP
-        InstallNode
         ConfigPerson
 
         cat <<EOF
@@ -85,9 +84,9 @@ function InstallPackages() {
 ================================================================================
 EOF
 
-    dnf -y install vim wget curl tree lsof mtr unzip git make gcc gcc-c++ \
-                   zsh tar screen epel-release
-    dnf clean all
+    dnf -y install epel-release
+    dnf -y update
+    dnf -y install vim wget curl tree lsof mtr unzip git zsh tar tcpdump screen
 }
 
 #修改系统基本设置
@@ -168,6 +167,23 @@ EOF
     systemctl restart firewalld.service
 }
 
+#安装Docker
+function InstallDocker() {
+    cat <<EOF
+================================================================================
+
+========================= 开始配置Docker =========================
+
+================================================================================
+EOF
+
+    dnf install -y yum-utils
+    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    systemctl enable docker
+    systemctl start docker
+}
+
 #安装ShadowSocks-libev
 function InstallSSlibev() {
     cat <<EOF
@@ -178,39 +194,44 @@ function InstallSSlibev() {
 ================================================================================
 EOF
 
-    cd /etc/yum.repos.d/
-    wget https://copr.fedorainfracloud.org/coprs/kuretru/shadowsocks/repo/epel-9/kuretru-shadowsocks-epel-9.repo
-    dnf -y install shadowsocks-libev
-    systemctl enable shadowsocks-libev.service
-    server_value="\"0.0.0.0\""
-    if [ $IPv6 ]; then
-        server_value="[\"[::0]\",\"0.0.0.0\"]"
-    fi
-    cat <<EOF >/etc/shadowsocks-libev/config.json
-{
-    "listen":"0.0.0.0",
-    "mode":"tcp_and_udp",
-    "server_port":8023,
-    "local_port":1080,
-    "password":"${SS_PASSWORD}",
-    "timeout":60,
-    "method":"chacha20-ietf-poly1305",
-    "fast_open":true,
-    "reuse-port":true,
-    "plugin":"v2ray-plugin",
-    "plugin_opts":"server;path=/ss/;host=${IPv4}"
-}
-EOF
+    mkdir -p /home/docker/shadowsocks-libev_with_v2ray-plugin
+    cd /home/docker/shadowsocks-libev_with_v2ray-plugin
+    wget -O compose.yaml https://github.com/kuretru/docker/raw/main/shadowsocks-libev_with-v2ray-plugin/compose.yaml
 
-    cd /usr/local/src
-    wget https://github.com/shadowsocks/v2ray-plugin/releases/download/$V2RAY_PLUGIN_VERSION/v2ray-plugin-linux-amd64-$V2RAY_PLUGIN_VERSION.tar.gz
-    tar -xzvf v2ray-plugin-linux-amd64-$V2RAY_PLUGIN_VERSION.tar.gz
-    ln -s /usr/local/src/v2ray-plugin_linux_arm64 /usr/bin/v2ray-plugin
-    systemctl restart shadowsocks-libev.service
+    mkdir config && cd config/
+    wget -O config.json https://github.com/kuretru/docker/raw/main/shadowsocks-libev_with-v2ray-plugin/config.json
+    # Do your changes
+    sed -i "s/\"password\":\".*\",/\"password\":\"${SS_PASSWORD}\",/g" config.json
+    sed -i "s/host=.*\"/host=${IPv4}\"/g" config.json
+    cd ../
+
+    docker compose up -d
+
 
     echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
     echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
     sysctl -p
+
+
+    mkdir -p /home/docker/shadowsocks-manager
+    cd /home/docker/shadowsocks-manager
+    wget -O compose.yaml https://github.com/kuretru/docker/raw/main/shadowsocks-manager/compose.yaml
+
+    mkdir config && cd config/
+    # Do your changes
+    cat <<EOF >default.yml
+type: s
+
+shadowsocks:
+  address: 127.0.0.1:6001
+manager:
+  address: 0.0.0.0:4001
+  password: '$SSMGR_PASSWORD'
+db: 'server.sqlite'
+EOF
+    cd ../
+
+    docker compose up -d
 }
 
 #安装nginx
@@ -285,38 +306,6 @@ EOF
     cd /home/nginx/$HOSTNAME/public
     wget https://api.inn-studio.com/download?id=xprober -O x.php
     chown nginx:nginx x.php
-}
-
-#安装Node.JS
-function InstallNode() {
-    cat <<EOF
-================================================================================
-
-============================== 开始安装Node.JS ==============================
-
-================================================================================
-EOF
-
-    dnf -y module reset nodejs
-    dnf -y module enable nodejs:18
-    dnf -y install nodejs
-    npm i -g shadowsocks-manager --unsafe-perm
-    mkdir /root/.ssmgr
-    cat <<EOF >/root/.ssmgr/default.yml
-type: s
-
-shadowsocks:
-  address: 127.0.0.1:6001
-manager:
-  address: 0.0.0.0:4001
-  password: '$SSMGR_PASSWORD'
-db: 'server.sqlite'
-EOF
-    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/ssmgr/ssmgr -O /etc/init.d/ssmgr
-    chmod +x /etc/init.d/ssmgr
-    chkconfig ssmgr on
-    chmod +x /etc/rc.d/rc.local
-    echo "ss-manager -c /etc/shadowsocks-libev/config.json -u --manager-address 127.0.0.1:6001 &" >>/etc/rc.d/rc.local
 }
 
 #个人配置
