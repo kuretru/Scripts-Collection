@@ -287,12 +287,10 @@ function InstallPHP() {
 ================================================================================
 EOF
 
-    dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
-    dnf -y install yum-utils
     dnf -y module reset php
-    dnf -y module install php:remi-8.2
-    dnf -y install php-mysqlnd php-gd
-    chmod -R root:nginx /var/lib/php/*
+    dnf module enable -y php:8.1
+    dnf install php php-mysqlnd php-gd
+    chown -R root:nginx /var/lib/php/*
     systemctl enable php-fpm.service
 
     cd /etc/php-fpm.d
@@ -303,6 +301,7 @@ EOF
     sed -i "s/^pm.min_spare_servers =.*$/pm.min_spare_servers = 1/g" www.conf
     sed -i "s/^pm.max_spare_servers =.*$/pm.max_spare_servers = 2/g" www.conf
     sed -i "s/^;request_slowlog_timeout =.*$/request_slowlog_timeout = 2s/g" www.conf
+
     cd /home/nginx/$HOSTNAME/public
     wget https://api.inn-studio.com/download?id=xprober -O x.php
     chown nginx:nginx x.php
