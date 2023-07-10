@@ -179,7 +179,7 @@ EOF
 
     dnf install -y yum-utils
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     systemctl enable docker
     systemctl start docker
 }
@@ -289,7 +289,7 @@ EOF
 
     dnf -y module reset php
     dnf module enable -y php:8.1
-    dnf install php php-mysqlnd php-gd
+    dnf install -y php php-mysqlnd php-gd
     chown -R root:nginx /var/lib/php/*
     systemctl enable php-fpm.service
 
