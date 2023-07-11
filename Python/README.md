@@ -17,3 +17,8 @@ bark.push("测试", title="标题")
 bark = Bark("device_token", aes_key="aes_key")
 bark.push_ciphertext("加密测试", title="标题")
 ```
+
+## url_monitor.py
+
+自动循环检测页面变更情况，发生变更时通过[Server酱](http://sc.ftqq.com/?c=code)发出通知  
+使用方法：填入Server酱`SCKEY`及要检测的页面URL
