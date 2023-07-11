@@ -278,6 +278,7 @@ EOF
     openssl x509 -req -days 3650 -in localhost.csr -signkey localhost.key -out localhost.crt
 
     mkdir -p /home/nginx/$HOSTNAME/public
+    mkdir -p /home/nginx/$HOSTNAME/log
     chown -R nginx:nginx /home/nginx
 }
 
