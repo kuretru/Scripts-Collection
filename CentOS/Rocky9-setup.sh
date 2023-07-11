@@ -163,6 +163,7 @@ EOF
     firewall-cmd --add-port=8022/tcp --permanent
     firewall-cmd --add-service=http --permanent
     firewall-cmd --add-service=https --permanent
+    firewall-cmd --add-service=http3 --permanent
     firewall-cmd --add-service=shadowsocks --permanent
     systemctl restart firewalld.service
 }
@@ -260,10 +261,13 @@ EOF
     wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/php_fastcgi.conf -O php_fastcgi.conf
     wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/proxy.conf -O proxy.conf
     wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/security.conf -O security.conf
+    wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/ss.conf -O ss.conf
     cd /etc/nginx/conf.d
     wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/default.conf -O default.conf
     wget https://github.com/kuretru/Scripts-Collection/raw/master/files/nginx/server.conf -O server.conf
     sed -i "s/FIXME/$HOSTNAME/g" server.conf
+
+    mkdir -p /etc/acme.sh/$HOSTNAME
 
     mkdir /etc/nginx/ssl
     chmod 750 /etc/nginx/ssl
